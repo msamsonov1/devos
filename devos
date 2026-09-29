@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgencyLead OS - Software Dev Outreach Engine</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .badge-glow {
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-indigo-600 selection:text-white">
+
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25">
+          <i class="ph-bold ph-paper-plane-tilt text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg tracking-tight flex items-center gap-2">
+            <span>DevPipeline OS</span>
+            <span class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Agency Edition</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Trigger-Based Lead Outreach & Multi-Touch Cadence Engine</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="resetDemoBtn" class="text-xs text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-800 hover:bg-slate-800 transition flex items-center gap-1.5">
+          <i class="ph ph-arrow-counter-clockwise"></i>
+          <span>Reset Defaults</span>
+        </button>
+        <div class="h-4 w-[1px] bg-slate-800 hidden sm:block"></div>
+        <span class="text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full flex items-center gap-1.5 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          21-Day Sequence Active
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+    <!-- Tab navigation -->
+    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+      <nav class="flex space-x-2 sm:space-x-4 overflow-x-auto pb-1" id="tabNav">
+        <button data-tab="sequence" class="tab-btn active px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-white bg-indigo-600 shadow-sm shadow-indigo-600/30">
+          <i class="ph ph-calendar-check text-base"></i>
+          <span>21-Day Cadence</span>
+        </button>
+        <button data-tab="generator" class="tab-btn px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+          <i class="ph ph-pencil-simple-line text-base"></i>
+          <span>Template Studio</span>
+        </button>
+        <button data-tab="objections" class="tab-btn px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+          <i class="ph ph-shield-check text-base"></i>
+          <span>Objection Playbook</span>
+        </button>
+        <button data-tab="tracker" class="tab-btn px-3.5 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+          <i class="ph ph-kanban text-base"></i>
+          <span>Lead Tracker</span>
+        </button>
+      </nav>
+      
+      <div class="hidden lg:flex items-center gap-2 text-xs text-slate-400">
+        <i class="ph ph-lightbulb text-amber-400"></i>
+        <span>Target: 50 accounts/mo with verified hiring or roadmap triggers</span>
+      </div>
+    </div>
+
+    <section id="sequenceTab" class="tab-content block space-y-6">
+      
+      <!-- Top Trigger Bar -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 p-4 sm:p-5 rounded-2xl flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div class="space-y-1">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+            <i class="ph-fill ph-crosshair"></i> Primary Buying Triggers
+          </h2>
+          <p class="text-xs text-slate-300">Target accounts exhibiting one of these 3 high-intent indicators before initiating day 1:</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full md:w-auto">
+          <div class="bg-slate-900/90 border border-slate-800/80 px-3 py-2 rounded-xl text-xs flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <div>
+              <span class="font-medium text-slate-200">Active Job Post</span>
+              <p class="text-[10px] text-slate-400">Hiring Sr. Dev / Backlog debt</p>
+            </div>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800/80 px-3 py-2 rounded-xl text-xs flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+            <div>
+              <span class="font-medium text-slate-200">Funding / Launch</span>
+              <p class="text-[10px] text-slate-400">Fresh Seed/Series A capital</p>
+            </div>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800/80 px-3 py-2 rounded-xl text-xs flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <div>
+              <span class="font-medium text-slate-200">Legacy Architecture</span>
+              <p class="text-[10px] text-slate-400">Needs migration / Mobile revamp</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Steps -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4" id="cadenceGrid">
+        <!-- Cadence cards will be rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Quick Action Guide -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
+        <h3 class="text-sm font-semibold text-slate-200 mb-3 flex items-center gap-2">
+          <i class="ph-bold ph-strategy text-indigo-400"></i> Execution Rules for Software Outreach
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <span class="font-semibold text-indigo-300 block mb-1">1. Keep Words Under 120</span>
+            Technical executives (CTOs/Heads of Product) read email on phones between standups. Long walls of text get deleted immediately.
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <span class="font-semibold text-indigo-300 block mb-1">2. Thread Replies (Don't New-Email)</span>
+            Follow-ups on Day 5, 15, and 21 should reply directly to the same email thread to preserve conversational context.
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <span class="font-semibold text-indigo-300 block mb-1">3. Soft Free Value Asset</span>
+            Don't ask for a 45-minute demo. Offer an asynchronous freebie like an architecture audit or UX teardown to demonstrate technical capability.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="generatorTab" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Prospect Variable Controls -->
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+              <i class="ph ph-sliders text-indigo-400"></i> Prospect Variables
+            </h3>
+            <span class="text-[10px] text-slate-400">Injects into drafts live</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Prospect First Name</label>
+              <input id="varFirstName" type="text" value="Alex" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Company Name</label>
+              <input id="varCompany" type="text" value="Nexus Logistics" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Trigger / Role Observed</label>
+              <input id="varTrigger" type="text" value="Senior React Native Developer" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Target Product / Tech Area</label>
+              <input id="varProduct" type="text" value="driver mobile dispatch app" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Similar Peer Client (Social Proof)</label>
+              <input id="varProofClient" type="text" value="FleetTrack Inc." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Measurable Result Achieved</label>
+              <input id="varProofResult" type="text" value="shaved 4 weeks off their launch cycle" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Your Name / Agency</label>
+              <input id="varSender" type="text" value="Marcus | ShiftBit Labs" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button id="applyPresetsBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-medium text-xs transition flex items-center justify-center gap-1.5">
+              <i class="ph ph-sparkle text-indigo-400"></i>
+              <span>Load SaaS Founder Scenario</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Generated Templates with Copy Buttons -->
+        <div class="lg:col-span-8 space-y-4">
+          
+          <!-- Template selector pills -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1" id="templatePills">
+            <button data-template="email1" class="template-pill active px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition">Day 1: The Observation</button>
+            <button data-template="linkedin" class="template-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition">Day 2: LinkedIn Note</button>
+            <button data-template="email2" class="template-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition">Day 5: Proof Point</button>
+            <button data-template="call" class="template-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition">Day 11: 30s Phone Script</button>
+            <button data-template="email3" class="template-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition">Day 15: Low-Friction Offer</button>
+            <button data-template="email4" class="template-pill px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition">Day 21: Clean Breakup</button>
+          </div>
+
+          <!-- Preview & Action Box -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 relative">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div>
+                <span id="previewTitle" class="text-sm font-semibold text-slate-200">Email 1 - Day 1: The Specific Observation</span>
+                <p id="previewSubtitle" class="text-xs text-slate-400">Trigger: Active job listing or public roadmap delay</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="copySubjectBtn" class="text-xs px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1">
+                  <i class="ph ph-copy"></i>
+                  <span>Copy Subject</span>
+                </button>
+                <button id="copyBodyBtn" class="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-md shadow-indigo-600/30 transition flex items-center gap-1.5">
+                  <i class="ph-bold ph-copy-simple"></i>
+                  <span>Copy Full Message</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subject Line Container -->
+            <div id="subjectContainer" class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 flex items-center justify-between">
+              <div class="text-xs">
+                <span class="text-slate-500 font-mono mr-2">Subject:</span>
+                <span id="subjectText" class="text-slate-200 font-medium font-sans"></span>
+              </div>
+              <span class="text-[10px] text-indigo-400 font-mono uppercase">Thread Root</span>
+            </div>
+
+            <!-- Body Container -->
+            <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 font-sans text-xs sm:text-sm leading-relaxed text-slate-300 space-y-3 whitespace-pre-wrap font-normal" id="bodyText">
+            </div>
+
+            <!-- Tip bar -->
+            <div class="pt-2 flex items-center gap-2 text-[11px] text-slate-400 border-t border-slate-800/60">
+              <i class="ph ph-info text-indigo-400 text-sm"></i>
+              <span id="channelTip">Tip: Never send this from your primary domain. Always warm secondary sending inboxes.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="objectionsTab" class="tab-content hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-base font-bold text-slate-100">Response Playbooks & Objections</h2>
+          <p class="text-xs text-slate-400">When tech buyers reply, 90% of answers fall into these four categories. Pivot them back to engagement.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="objectionCards">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <section id="trackerTab" class="tab-content hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-bold text-slate-100">Prospect Execution Pipeline</h2>
+          <p class="text-xs text-slate-400">Track active software prospects through the 21-day multi-channel workflow.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="addLeadModalBtn" class="text-xs px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium transition flex items-center gap-1.5 shadow-md shadow-indigo-600/25">
+            <i class="ph-bold ph-plus"></i>
+            <span>Add New Prospect</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Kanban Columns -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <!-- Stage 1 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col min-h-[480px]">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span> Day 1–2 Outreach
+            </span>
+            <span id="colCount-outreach" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-medium">0</span>
+          </div>
+          <div id="col-outreach" class="space-y-2.5 flex-1 overflow-y-auto"></div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col min-h-[480px]">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-indigo-500"></span> In Follow-Up (Day 5–15)
+            </span>
+            <span id="colCount-followup" class="text-xs px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 font-mono font-medium">0</span>
+          </div>
+          <div id="col-followup" class="space-y-2.5 flex-1 overflow-y-auto"></div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col min-h-[480px]">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Engaged / Meeting Set
+            </span>
+            <span id="colCount-meeting" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono font-medium">0</span>
+          </div>
+          <div id="col-meeting" class="space-y-2.5 flex-1 overflow-y-auto"></div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col min-h-[480px]">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span> Closed / Breakup
+            </span>
+            <span id="colCount-closed" class="text-xs px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 font-mono font-medium">0</span>
+          </div>
+          <div id="col-closed" class="space-y-2.5 flex-1 overflow-y-auto"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Box -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 border border-indigo-500/40 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+    <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+      <i class="ph-bold ph-check text-sm"></i>
+    </div>
+    <div class="text-xs">
+      <p class="font-semibold text-slate-200" id="toastTitle">Copied to Clipboard</p>
+      <p class="text-slate-400 text-[11px]" id="toastDesc">Ready to paste into your sending tool.</p>
+    </div>
+  </div>
+
+  <!-- Add Prospect Modal (Custom UI, avoiding alert/confirm) -->
+  <div id="addModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+          <i class="ph-bold ph-user-plus text-indigo-400"></i> New Lead Entry
+        </h3>
+        <button id="closeModalBtn" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <i class="ph ph-x text-base"></i>
+        </button>
+      </div>
+
+      <form id="newLeadForm" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Contact Name & Title</label>
+          <input required id="leadName" type="text" placeholder="e.g. Sarah Jenkins (VP Eng)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Company</label>
+          <input required id="leadCompany" type="text" placeholder="e.g. HealthBridge Logistics" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Identified Trigger</label>
+          <select id="leadTrigger" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            <option value="Hiring Senior Engineers">Hiring Senior Engineers (Roadmap Backlog)</option>
+            <option value="Fresh Seed/Series A">Fresh Capital / Fast Roadmap Pressure</option>
+            <option value="Outdated Mobile/Web App">Legacy Architecture / Needs Modernization</option>
+            <option value="Re-platforming Project">Cloud / Tech Stack Migration</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">Initial Stage</label>
+          <select id="leadStage" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500">
+            <option value="outreach">Day 1–2 Outreach</option>
+            <option value="followup">In Follow-Up (Day 5–15)</option>
+            <option value="meeting">Engaged / Meeting Set</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" id="cancelModalBtn" class="px-3 py-2 rounded-xl text-slate-400 hover:text-white text-xs">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium text-xs shadow-md shadow-indigo-600/30">Save Prospect</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // State storage for prospects
+    let leads = [
+      { id: '1', name: 'Dan Kowalski (CTO)', company: 'FleetMetrics', trigger: 'Hiring Sr. Node Lead', stage: 'outreach', day: 'Day 1' },
+      { id: '2', name: 'Elena Ramos (VP Product)', company: 'CareSync EHR', trigger: 'Legacy iOS Refactor', stage: 'followup', day: 'Day 5' },
+      { id: '3', name: 'Marcus Chen (Founder)', company: 'PayFlow API', trigger: 'Series A Milestone', stage: 'meeting', day: 'Discovery Call Fri' },
+      { id: '4', name: 'David Vance (COO)', company: 'Apex Freight', trigger: 'No budget response', stage: 'closed', day: 'Breakup Sent' }
+    ];
+
+    // Cadence sequence definition
+    const cadenceSteps = [
+      {
+        day: 'Day 1',
+        channel: 'Cold Email 1',
+        icon: 'ph-envelope-simple',
+        color: 'indigo',
+        angle: 'The Specific Observation',
+        desc: 'Keep under 120 words. Focus strictly on their open developer job or product sprint delay.',
+        metric: 'Aim for >60% open rate'
+      },
+      {
+        day: 'Day 2',
+        channel: 'LinkedIn Touch',
+        icon: 'ph-linkedin-logo',
+        color: 'sky',
+        angle: 'Soft Profile Connection',
+        desc: 'View profile, send a blank connection request or a 1-sentence note. DO NOT pitch yet.',
+        metric: 'Builds warm recognition'
+      },
+      {
+        day: 'Day 5',
+        channel: 'Cold Email 2',
+        icon: 'ph-arrow-bend-down-right',
+        color: 'indigo',
+        angle: 'Peer Proof Point (Threaded)',
+        desc: 'Reply to original thread with a 2-sentence case study on how you cut sprint times for a peer.',
+        metric: 'Generates ~35% of replies'
+      },
+      {
+        day: 'Day 8',
+        channel: 'LinkedIn Interaction',
+        icon: 'ph-thumbs-up',
+        color: 'sky',
+        angle: 'Meaningful Engagement',
+        desc: 'Leave an insightful comment on their recent post or share an architectural whitepaper.',
+        metric: 'Elevates technical authority'
+      },
+      {
+        day: 'Day 11',
+        channel: 'Phone Call / Voicemail',
+        icon: 'ph-phone-call',
+        color: 'emerald',
+        angle: '30-Second Pattern Interrupt',
+        desc: 'Brief call referencing the email thread. Never sound like a script-reading telemarketer.',
+        metric: 'Shows human presence'
+      },
+      {
+        day: 'Day 15',
+        channel: 'Cold Email 3',
+        icon: 'ph-gift',
+        color: 'indigo',
+        angle: 'Low-Friction Asset',
+        desc: 'Offer a complimentary code audit, API breakdown, or Figma UX teardown without strings.',
+        metric: 'Breaks final skepticism'
+      },
+      {
+        day: 'Day 18',
+        channel: 'LinkedIn DM',
+        icon: 'ph-chat-circle-dots',
+        color: 'sky',
+        angle: 'Casual Check-in',
+        desc: 'Quick 20-word note on LinkedIn asking if their hiring backlog got resolved this sprint.',
+        metric: 'Second device touch'
+      },
+      {
+        day: 'Day 21',
+        channel: 'Cold Email 4',
+        icon: 'ph-hand-waving',
+        color: 'amber',
+        angle: 'The Clean Breakup',
+        desc: 'Release all sales pressure. Say you assume it is not a priority and will table until Q3.',
+        metric: 'Brings silent leads back'
+      }
+    ];
+
+    // Objections playbook dataset
+    const objectionPlaybooks = [
+      {
+        title: '"Send me your capabilities deck / presentation"',
+        tag: 'Information Stall',
+        color: 'indigo',
+        context: 'Sending a generic 30-slide PDF guarantees it gets buried. Qualify their exact need instead.',
+        response: `Happy to share our work! To make sure I only send relevant case studies rather than a generic 20-page deck: are you focused more on mobile frontends (React Native/Flutter), or backend infrastructure and third-party APIs right now?`
+      },
+      {
+        title: '"We handle all software engineering in-house"',
+        tag: 'Internal Preference',
+        color: 'emerald',
+        context: 'Validate their setup. In-house is always best, but roadmap overflows happen constantly.',
+        response: `Makes total sense—an internal team is always the best core. Out of curiosity, do you ever bring on specialized outside bandwidth for 4-to-6-week sprint overflows, or do you strictly hold off until your full-time hires ramp up?`
+      },
+      {
+        title: '"We don\'t have any budget for this right now"',
+        tag: 'Budget Freeze',
+        color: 'amber',
+        context: 'Do not push a contract. Offer an asynchronous freebie and lock in permission to follow up next quarter.',
+        response: `Completely understand—budgets are tight this quarter. If you'd like, I can still run a quick complimentary review on your current {Product Area} architecture so you have it ready for Q3 planning. Would that be helpful?`
+      },
+      {
+        title: '"We already have an offshore/outsourcing partner"',
+        tag: 'Vendor Incumbent',
+        color: 'rose',
+        context: 'Acknowledge their vendor. Target offshore friction points (time zone lag, code documentation quality).',
+        response: `Great to hear you have that covered. Most teams we speak with use offshore for maintenance, but lean on us when they need senior US-timezone engineers to tackle complex architectural refactors with zero communication delay. Worth keeping in touch for future overflow?`
+      }
+    ];
+
+    // Templates dictionary
+    const templates = {
+      email1: {
+        title: "Email 1 - Day 1: The Specific Observation",
+        subtitle: "Trigger: Active developer job posting or public roadmap pressure",
+        channelTip: "Tip: Never send this from your primary domain. Always warm secondary sending inboxes via Instantly/Smartlead.",
+        subject: "{Company} roadmap / {Trigger}",
+        body: `Hi {First_Name},
+
+Saw that you're hiring for a {Trigger} to help build out {Product}. Given the typical 3-month cycle to recruit and onboard specialized engineers, sprint roadmaps often get backed up.
+
+We run an agile development shop helping engineering leaders deploy production-ready features while they finish their permanent hiring. Recently, we helped {Proof_Client} and {Proof_Result}.
+
+Are you open to seeing how we could handle a sprint or two of that backlog while you finalize the full-time team?
+
+Best,
+{Sender}`
+      },
+      linkedin: {
+        title: "LinkedIn Connection Note (Day 2)",
+        subtitle: "Character count: ~200 chars. Soft and non-salesy.",
+        channelTip: "Tip: If sending via mobile app, blank requests often outperform long pitches.",
+        subject: "LinkedIn Connection Note",
+        body: `Hi {First_Name} – noticed {Company}'s recent work on {Product} and saw you're expanding engineering. Thought I'd connect and follow your team's launch progress.`
+      },
+      email2: {
+        title: "Email 2 - Day 5: The Peer Proof Point",
+        subtitle: "Channel: Threaded reply to original message",
+        channelTip: "Tip: Threading is crucial. It keeps your original observation visible at the bottom.",
+        subject: "Re: {Company} roadmap / {Trigger}",
+        body: `Hi {First_Name},
+
+To give you quick context on my note earlier: when {Proof_Client} was scaling their platform, their internal team was bottlenecked on rapid deployment.
+
+We embedded 2 senior engineers into their sprint within 5 days, cleared their core ticket backlog, and handed over cleanly documented code before their full-time hire even started.
+
+Worth a brief 10-minute sync this Thursday to see if our tech stack aligns with what you need?
+
+Best,
+{Sender}`
+      },
+      call: {
+        title: "Phone Script - Day 11: 30-Second Pattern Interrupt",
+        subtitle: "Target: CTO / VP Engineering voicemail or direct pickup",
+        channelTip: "Tip: Speak calmly and deliberately. Acknowledge immediately that you are interrupting.",
+        subject: "Phone Outreach Script",
+        body: `[If direct answer]:
+"Hey {First_Name}, this is {Sender}. I know you weren't expecting my call, so I'll be brief—do you have 30 seconds?
+
+I sent a note last week regarding your search for a {Trigger} at {Company}. We help engineering teams knock out 1 or 2 backlog sprints so product launches don't stall while recruiting. 
+
+Are you open to a brief chat later this week, or is your internal bandwidth totally covered?"
+
+[If Voicemail]:
+"Hey {First_Name}, {Sender} here. Saw your opening for a {Trigger} at {Company}. Shot you an email about how we help bridge the gap on sprint delays for teams like {Proof_Client}. Check your inbox under '{Company} roadmap' when you get a chance. Talk soon."`
+      },
+      email3: {
+        title: "Email 3 - Day 15: The Low-Friction Value Asset",
+        subtitle: "Channel: Threaded reply to original message",
+        channelTip: "Tip: Low commitment. Offering a specific free audit reduces sales resistance.",
+        subject: "Re: {Company} roadmap / {Trigger}",
+        body: `Hi {First_Name},
+
+Appreciate that vetting an external dev partner takes time and trust.
+
+If you have an active backlog ticket or a feature spec for {Product} that's stalled, send over the brief. We’ll map out a recommended technical architecture and scope breakdown for free—even if you end up having your internal team build it.
+
+Would that be useful for your team this sprint?
+
+Best,
+{Sender}`
+      },
+      email4: {
+        title: "Email 4 - Day 21: The Clean Breakup",
+        subtitle: "Channel: Threaded reply to original message",
+        channelTip: "Tip: This generates 20-30% of your total responses by removing sales pressure.",
+        subject: "Re: {Company} roadmap / {Trigger}",
+        body: `Hi {First_Name},
+
+Usually when I don't hear back, it means one of two things: either {Company}'s dev roadmap is fully staffed and on track, or this simply isn't a priority right now.
+
+Either way, I don't want to clutter your inbox. I'll circle back in a few months to see how your {Product} launch went.
+
+If your bandwidth changes before then, feel free to reach out anytime.
+
+Best,
+{Sender}`
+      }
+    };
+
+    let currentTemplateKey = 'email1';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCadenceCards();
+      renderObjections();
+      renderTemplates();
+      renderKanban();
+      setupTabs();
+      setupTemplatePills();
+      setupInputListeners();
+      setupModal();
+    });
+
+    // Tab Switcher
+    function setupTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.getAttribute('data-tab');
+
+          tabBtns.forEach(b => {
+            b.classList.remove('active', 'text-white', 'bg-indigo-600', 'shadow-sm', 'shadow-indigo-600/30');
+            b.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900');
+          });
+
+          btn.classList.add('active', 'text-white', 'bg-indigo-600', 'shadow-sm', 'shadow-indigo-600/30');
+          btn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900');
+
+          tabContents.forEach(content => {
+            if (content.id === `${target}Tab`) {
+              content.classList.remove('hidden');
+              content.classList.add('block');
+            } else {
+              content.classList.remove('block');
+              content.classList.add('hidden');
+            }
+          });
+        });
+      });
+    }
+
+    // Render 21-Day Cadence
+    function renderCadenceCards() {
+      const container = document.getElementById('cadenceGrid');
+      container.innerHTML = cadenceSteps.map((step, idx) => `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-bold text-indigo-400 px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60">${step.day}</span>
+              <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                <i class="ph ${step.icon}"></i> ${step.channel}
+              </span>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-slate-200">${step.angle}</h4>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">${step.desc}</p>
+            </div>
+          </div>
+          <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+            <span class="text-slate-400">${step.metric}</span>
+            <button onclick="jumpToTemplate('${idx === 0 ? 'email1' : idx === 1 ? 'linkedin' : idx === 2 ? 'email2' : idx === 4 ? 'call' : idx === 5 ? 'email3' : 'email4'}')" class="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-0.5">
+              <span>View Copy</span>
+              <i class="ph ph-caret-right"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Objections
+    function renderObjections() {
+      const container = document.getElementById('objectionCards');
+      container.innerHTML = objectionPlaybooks.map((obj, i) => `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3.5 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-${obj.color}-500/10 text-${obj.color}-400 border border-${obj.color}-500/20 font-semibold">${obj.tag}</span>
+              <button onclick="copyObjectionText(${i})" class="text-xs text-slate-400 hover:text-indigo-300 transition flex items-center gap-1">
+                <i class="ph ph-copy"></i> Copy Script
+              </button>
+            </div>
+            <h4 class="text-sm font-bold text-slate-200">${obj.title}</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">${obj.context}</p>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 text-xs font-sans text-slate-300 italic">
+            "${obj.response}"
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Template View
+    function renderTemplates() {
+      const t = templates[currentTemplateKey];
+      const fn = document.getElementById('varFirstName').value || 'Alex';
+      const co = document.getElementById('varCompany').value || 'Nexus Logistics';
+      const tr = document.getElementById('varTrigger').value || 'Senior React Native Developer';
+      const pr = document.getElementById('varProduct').value || 'driver mobile dispatch app';
+      const cl = document.getElementById('varProofClient').value || 'FleetTrack Inc.';
+      const res = document.getElementById('varProofResult').value || 'shaved 4 weeks off their launch cycle';
+      const snd = document.getElementById('varSender').value || 'Marcus | ShiftBit Labs';
+
+      // Replacements
+      const replaceVars = (str) => {
+        return str
+          .replaceAll('{First_Name}', fn)
+          .replaceAll('{Company}', co)
+          .replaceAll('{Trigger}', tr)
+          .replaceAll('{Product}', pr)
+          .replaceAll('{Proof_Client}', cl)
+          .replaceAll('{Proof_Result}', res)
+          .replaceAll('{Sender}', snd);
+      };
+
+      document.getElementById('previewTitle').innerText = t.title;
+      document.getElementById('previewSubtitle').innerText = t.subtitle;
+      document.getElementById('channelTip').innerText = t.channelTip;
+      document.getElementById('subjectText').innerText = replaceVars(t.subject);
+      document.getElementById('bodyText').innerText = replaceVars(t.body);
+    }
+
+    function setupTemplatePills() {
+      const pills = document.querySelectorAll('.template-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => {
+            p.classList.remove('bg-indigo-600', 'text-white');
+            p.classList.add('bg-slate-900', 'text-slate-300');
+          });
+          pill.classList.remove('bg-slate-900', 'text-slate-300');
+          pill.classList.add('bg-indigo-600', 'text-white');
+
+          currentTemplateKey = pill.getAttribute('data-template');
+          renderTemplates();
+        });
+      });
+    }
+
+    function setupInputListeners() {
+      const inputs = [
+        'varFirstName', 'varCompany', 'varTrigger', 'varProduct',
+        'varProofClient', 'varProofResult', 'varSender'
+      ];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', renderTemplates);
+      });
+
+      // Preset button
+      document.getElementById('applyPresetsBtn').addEventListener('click', () => {
+        document.getElementById('varFirstName').value = 'Jason';
+        document.getElementById('varCompany').value = 'FinStack Cloud';
+        document.getElementById('varTrigger').value = 'Lead DevOps Engineer';
+        document.getElementById('varProduct').value = 'multi-region AWS migration';
+        document.getElementById('varProofClient').value = 'LedgerCore';
+        document.getElementById('varProofResult').value = 'reduced cloud infra overhead by 38%';
+        document.getElementById('varSender').value = 'Sarah | CloudNative Labs';
+        renderTemplates();
+        showToast('Preset Loaded', 'SaaS founder scenario populated across templates.');
+      });
+
+      // Reset Defaults button
+      document.getElementById('resetDemoBtn').addEventListener('click', () => {
+        document.getElementById('varFirstName').value = 'Alex';
+        document.getElementById('varCompany').value = 'Nexus Logistics';
+        document.getElementById('varTrigger').value = 'Senior React Native Developer';
+        document.getElementById('varProduct').value = 'driver mobile dispatch app';
+        document.getElementById('varProofClient').value = 'FleetTrack Inc.';
+        document.getElementById('varProofResult').value = 'shaved 4 weeks off their launch cycle';
+        document.getElementById('varSender').value = 'Marcus | ShiftBit Labs';
+        renderTemplates();
+        showToast('Reset Complete', 'Default values restored.');
+      });
+
+      // Copy buttons
+      document.getElementById('copySubjectBtn').addEventListener('click', () => {
+        const text = document.getElementById('subjectText').innerText;
+        copyToClipboard(text);
+        showToast('Subject Copied', text);
+      });
+
+      document.getElementById('copyBodyBtn').addEventListener('click', () => {
+        const text = document.getElementById('bodyText').innerText;
+        copyToClipboard(text);
+        showToast('Body Copied', 'Template ready for sending.');
+      });
+    }
+
+    // Direct jump from Cadence card to Template
+    window.jumpToTemplate = function(templateKey) {
+      currentTemplateKey = templateKey;
+      
+      // Switch active tab to generator
+      const generatorBtn = document.querySelector('[data-tab="generator"]');
+      generatorBtn.click();
+
+      // Switch active pill
+      const pills = document.querySelectorAll('.template-pill');
+      pills.forEach(p => {
+        if (p.getAttribute('data-template') === templateKey) {
+          p.classList.remove('bg-slate-900', 'text-slate-300');
+          p.classList.add('bg-indigo-600', 'text-white');
+        } else {
+          p.classList.remove('bg-indigo-600', 'text-white');
+          p.classList.add('bg-slate-900', 'text-slate-300');
+        }
+      });
+      renderTemplates();
+    };
+
+    // Copy Objection Script
+    window.copyObjectionText = function(index) {
+      const script = objectionPlaybooks[index].response;
+      copyToClipboard(script);
+      showToast('Objection Script Copied', 'Ready to paste in your email or LinkedIn reply.');
+    };
+
+    // Render Kanban Leads
+    function renderKanban() {
+      const columns = {
+        outreach: document.getElementById('col-outreach'),
+        followup: document.getElementById('col-followup'),
+        meeting: document.getElementById('col-meeting'),
+        closed: document.getElementById('col-closed')
+      };
+
+      const counts = { outreach: 0, followup: 0, meeting: 0, closed: 0 };
+
+      // Clear columns
+      Object.values(columns).forEach(col => col.innerHTML = '');
+
+      leads.forEach(lead => {
+        counts[lead.stage]++;
+        const card = document.createElement('div');
+        card.className = "bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2 hover:border-slate-700 transition";
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold text-xs text-slate-200">${lead.name}</p>
+              <p class="text-[11px] text-slate-400">${lead.company}</p>
+            </div>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-900 text-indigo-400 border border-indigo-900/40">${lead.day}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 bg-slate-900/60 p-1.5 rounded-lg border border-slate-900 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> ${lead.trigger}
+          </p>
+          <div class="flex items-center justify-between pt-1">
+            <select onchange="updateLeadStage('${lead.id}', this.value)" class="bg-slate-900 text-[10px] text-slate-300 rounded border border-slate-800 px-1.5 py-0.5 focus:outline-none">
+              <option value="outreach" ${lead.stage === 'outreach' ? 'selected' : ''}>Stage 1: Day 1-2</option>
+              <option value="followup" ${lead.stage === 'followup' ? 'selected' : ''}>Stage 2: Followup</option>
+              <option value="meeting" ${lead.stage === 'meeting' ? 'selected' : ''}>Stage 3: Meeting</option>
+              <option value="closed" ${lead.stage === 'closed' ? 'selected' : ''}>Stage 4: Closed/Breakup</option>
+            </select>
+            <button onclick="deleteLead('${lead.id}')" class="text-slate-500 hover:text-rose-400 text-xs p-1">
+              <i class="ph ph-trash"></i>
+            </button>
+          </div>
+        `;
+        columns[lead.stage].appendChild(card);
+      });
+
+      // Update counters
+      document.getElementById('colCount-outreach').innerText = counts.outreach;
+      document.getElementById('colCount-followup').innerText = counts.followup;
+      document.getElementById('colCount-meeting').innerText = counts.meeting;
+      document.getElementById('colCount-closed').innerText = counts.closed;
+    }
+
+    window.updateLeadStage = function(id, newStage) {
+      const item = leads.find(l => l.id === id);
+      if (item) {
+        item.stage = newStage;
+        if (newStage === 'meeting') item.day = 'Meeting Booked';
+        if (newStage === 'closed') item.day = 'Cycle Complete';
+        renderKanban();
+        showToast('Lead Moved', `${item.company} updated.`);
+      }
+    };
+
+    window.deleteLead = function(id) {
+      leads = leads.filter(l => l.id !== id);
+      renderKanban();
+      showToast('Lead Removed', 'Lead deleted from board.');
+    };
+
+    // Modal Logic
+    function setupModal() {
+      const modal = document.getElementById('addModalOverlay');
+      const openBtn = document.getElementById('addLeadModalBtn');
+      const closeBtn = document.getElementById('closeModalBtn');
+      const cancelBtn = document.getElementById('cancelModalBtn');
+      const form = document.getElementById('newLeadForm');
+
+      const closeModal = () => modal.classList.add('hidden');
+      const openModal = () => modal.classList.remove('hidden');
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newLead = {
+          id: Date.now().toString(),
+          name: document.getElementById('leadName').value,
+          company: document.getElementById('leadCompany').value,
+          trigger: document.getElementById('leadTrigger').value,
+          stage: document.getElementById('leadStage').value,
+          day: document.getElementById('leadStage').value === 'meeting' ? 'Call Set' : 'Day 1'
+        };
+        leads.unshift(newLead);
+        renderKanban();
+        closeModal();
+        form.reset();
+        showToast('Lead Added', `${newLead.company} added to campaign pipeline.`);
+      });
+    }
+
+    // Helper: Copy to Clipboard without alert()
+    function copyToClipboard(text) {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      tempTextArea.style.position = "fixed";
+      tempTextArea.style.left = "-9999px";
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Copy fallback failed', err);
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    // Toast Manager
+    let toastTimeout;
+    function showToast(title, desc) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastDesc').innerText = desc;
+
+      clearTimeout(toastTimeout);
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-12');
+      toast.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-12');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
